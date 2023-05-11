@@ -360,9 +360,9 @@ function ObsPatientPage() {
           <h2>ผู้ป่วยในการดูเเล</h2>
           <div className='patient-data-container'>
             <div className="body-text">
-              {patientList.map((patient, index) => (
+              {patientList? patientList.map((patient, index) => (
                 <UserCard key={index} user={patient} onClick={() => handlePatientClick(index)} />
-              ))}
+              )) : <h2>ไม่มีผู้ป่วย</h2>}
               <hr />
             </div>
             <div className="user-details">
@@ -394,19 +394,25 @@ function ObsPatientPage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {patientSlotActivity
-                            .filter((activity) => activity.purpose === "EAT")
-                            .map((activity) => (
-                              <tr key={activity.activityID}>
-                                <td>{activity.isChecked ? "ใช่" : "ยัง"}</td>
-                                <td>{new Date(parseInt(activity.activityDate)).toLocaleDateString()}</td>
-                                <td>{new Date(parseInt(activity.activityTime)).toLocaleTimeString()}</td>
-                                <td>{activity.purpose}</td>
-                                <td>
-                                    <button className="side-button" onClick={(e) => {handleVideoPageView("https://iot.ict.mahidol.ac.th/data/video/" + activity.youtubeLink)}}>วิดีโอ</button>
-                                </td>
-                              </tr>
-                            ))}
+                          {patientSlotActivity.filter((activity) => activity.purpose === "EAT").length > 0 ? (
+                            patientSlotActivity
+                              .filter((activity) => activity.purpose === "EAT")
+                              .map((activity) => (
+                                <tr key={activity.activityID}>
+                                  <td>{activity.isChecked ? "ใช่" : "ยัง"}</td>
+                                  <td>{formatDate(new Date(parseInt(activity.activityDate)).toLocaleDateString())}</td>
+                                  <td>{new Date(parseInt(activity.activityTime)).toLocaleTimeString()}</td>
+                                  <td>{activity.purpose}</td>
+                                  <td>
+                                    <button className="side-button" onClick={(e) => { handleVideoPageView("https://iot.ict.mahidol.ac.th/data/video/" + activity.youtubeLink) }}>
+                                      วิดีโอ
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))
+                          ) : (
+                            <h2>ไม่พบข้อมูล</h2>
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -422,16 +428,16 @@ function ObsPatientPage() {
                             <th>ไม่แน่ใจถูก</th>
                             <th>ไม่แน่ใจผิด</th>
                           </tr>
-                          {patientColorBlind.map((colorBlind) => (
+                          {patientColorBlind[0]? patientColorBlind.map((colorBlind) => (
                             <tr key={colorBlind.colorBlindID}>
-                              <td>{new Date(parseInt(colorBlind.colorBlindDate)).toLocaleDateString()}</td>
+                              <td>{formatDate(new Date(parseInt(colorBlind.colorBlindDate)).toLocaleDateString())}</td>
                               <td>{colorBlind.correct}</td>
                               <td>{colorBlind.incorrect}</td>
                               <td>{colorBlind.nothing}</td>
                               <td>{colorBlind.unsureCorrect}</td>
                               <td>{colorBlind.unsureIncorrect}</td>
                             </tr>
-                          ))}
+                          )) : <h2>ไม่พบข้อมูล</h2>}
                         </tbody>
                       </table>
                     </div>
@@ -444,13 +450,13 @@ function ObsPatientPage() {
                             <th>เวลา</th>
                             <th>รายละเอียดของอาการ</th>
                           </tr>
-                          {patientSideEffect.map((sideEffect) => (
+                          {patientSideEffect[0]? patientSideEffect.map((sideEffect) => (
                             <tr key={sideEffect.sideEffectID}>
                               <td>{formatDate(sideEffect.effectDate)}</td>
                               <td>{new Date(parseInt(sideEffect.effectTime)).toLocaleTimeString()}</td>
                               <td>{sideEffect.effectDesc}</td>
                             </tr>
-                          ))}
+                          )):<h2>ไม่พบข้อมูล</h2>}
                         </tbody>
                       </table>
                     </div>
